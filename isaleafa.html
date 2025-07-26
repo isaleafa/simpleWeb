@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isaleafa的个人主页</title>
+    
+    <!-- 引入 Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 引入 Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 自定义样式 */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e2e8f0;
+        }
+
+        /* 粒子特效容器 */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -2;
+        }
+        
+        /* 鼠标跟随光标效果 */
+        .cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45, 212, 191, 0.15) 0%, rgba(45, 212, 191, 0) 60%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        /* 渐变标题 */
+        .gradient-text {
+            background: linear-gradient(to right, #34d399, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* 卡片和游戏容器的玻璃拟态效果 */
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 游戏画布 */
+        #gameCanvas {
+            background-color: #0c1220;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1; /* 保持正方形 */
+        }
+        
+        /* 游戏结束弹窗 */
+        #gameOverModal {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        /* 确保内容在特效之上 */
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 滚动触发动画 */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- 粒子特效容器 -->
+    <div id="particles-js"></div>
+
+    <!-- 鼠标跟随光标的 div -->
+    <div class="cursor-glow"></div>
+
+    <!-- 主容器 -->
+    <div class="content-wrapper container mx-auto px-6 md:px-12 py-8">
+
+        <!-- 导航栏 -->
+        <header class="relative flex justify-between items-center mb-24 md:mb-32">
+            <h2 class="text-2xl font-bold text-white">Isaleafa</h2>
+            <!-- 桌面导航 -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#about" class="text-slate-300 hover:text-white transition duration-300">关于我</a>
+                <a href="#skills" class="text-slate-300 hover:text-white transition duration-300">我的技能</a>
+                <a href="#projects" class="text-slate-300 hover:text-white transition duration-300">我的项目</a>
+                <a href="#game" class="text-slate-300 hover:text-white transition duration-300">玩个游戏</a>
+                <a href="#contact" class="text-slate-300 hover:text-white transition duration-300">联系我</a>
+            </nav>
+            <!-- 移动端汉堡菜单按钮 -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+            <!-- 移动端菜单 (默认隐藏) -->
+            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 mt-4 bg-gray-900 bg-opacity-95 rounded-lg shadow-lg z-20">
+                <a href="#about" class="block text-center text-white py-3 hover:bg-gray-800 transition">关于我</a>
+                <a href="#skills" class="block text-center text-white py-3 hover:bg-gray-800 transition">我的技能</a>
+                <a href="#projects" class="block text-center text-white py-3 hover:bg-gray-800 transition">我的项目</a>
+                <a href="#game" class="block text-center text-white py-3 hover:bg-gray-800 transition">玩个游戏</a>
+                <a href="#contact" class="block text-center text-white py-3 hover:bg-gray-800 transition">联系我</a>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main>
+
+            <!-- 英雄区域 (Hero Section) -->
+            <section class="text-center mb-24 md:mb-40 fade-in-section">
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-black mb-4 leading-tight">
+                    <span class="gradient-text">代码构建世界</span><br>
+                    <span class="text-white">智能驱动未来</span>
+                </h1>
+                <p class="text-base sm:text-lg text-slate-400 max-w-3xl mx-auto mb-8">
+                    你好，我是Isaleafa。一名热情的开发者，致力于用代码将复杂的想法转化为优雅、实用的解决方案。
+                </p>
+                <a href="#projects" class="bg-teal-500 text-white font-bold py-3 px-8 rounded-full hover:bg-teal-400 transition duration-300 transform hover:scale-105 inline-block">
+                    查看我的作品
+                </a>
+            </section>
+
+            <!-- 关于我区域 (About Section) -->
+            <section id="about" class="mb-24 md:mb-40 flex flex-col md:flex-row items-center gap-8 md:gap-12 fade-in-section">
+                <div class="w-full md:w-1/2 flex justify-center">
+                    <img src="https://gitee.com/yjxyyds/images/raw/master/imgs/avatar.jpg" alt="个人头像" class="rounded-full w-48 h-48 md:w-64 md:h-64 shadow-2xl shadow-teal-500/20 object-cover">
+                </div>
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">关于我</h2>
+                    <p class="text-slate-400 leading-relaxed">
+                        我是Isaleafa，一名来自ECUST计算机科学与技术专业的开发者，对人工智能、系统架构和后端开发充满热情。
+                        <br><br>
+                        我着迷于探索大型语言模型（LLM）在软件工程领域的应用潜力，并主导开发了 <strong>AI Agent</strong> 项目，实践了从自然语言到完整项目代码的生成。同时，我也热衷于底层系统构建，独立开发了 <strong>Shell-Cpp-Dash</strong>，一个C++实现的轻量级命令行Shell。
+                        <br><br>
+                        无论是构建智能代理，还是开发像 <strong>Animal-Helper</strong> 这样面向用户的应用，我都致力于将复杂的想法转化为健壮、优雅且实用的技术解决方案。
+                    </p>
+                </div>
+            </section>
+
+            <!-- 新增：技能区域 (Skills Section) -->
+            <section id="skills" class="mb-24 md:mb-40 fade-in-section">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">我的技能</h2>
+                <div class="max-w-4xl mx-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-8 text-center">
+                    <!-- Python -->
+                    <div class="flex flex-col items-center gap-2">
+                        <svg class="w-16 h-16" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><path fill="#4B8BBE" d="M64 128a64 64 0 0 1-64-64h64z"/><path fill="#FFD43B" d="M64 0a64 64 0 0 1 64 64H64z"/><path fill="#FFFFFF" d="M50.4 89.6a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm27.2-51.2a8 8 0 1 1-16 0 8 8 0 0 1 16 0z"/></svg>
+                        <span class="text-slate-300">Python</span>
+                    </div>
+                    <!-- C++ -->
+                    <div class="flex flex-col items-center gap-2">
+                        <svg class="w-16 h-16" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><path fill="#00599C" d="M64 0C28.7 0 0 28.7 0 64s28.7 64 64 64 64-28.7 64-64S99.3 0 64 0zm0 120C33.1 120 8 94.9 8 64S33.1 8 64 8s56 25.1 56 56-25.1 56-56 56z"/><path fill="#0082C3" d="M48 48h32v32H48z"/><path fill="#FFFFFF" d="M65.6 40h-3.2v14.4h-16V56h16v14.4h3.2V56h16V40h-16zm-3.2 3.2h12.8v12.8h-12.8zM46.4 72h-3.2v14.4h-16V88h16v14.4h3.2V88h16V72h-16zm-3.2 3.2h12.8v12.8h-12.8z"/></svg>
+                        <span class="text-slate-300">C++</span>
+                    </div>
+                    <!-- Langchain -->
+                    <div class="flex flex-col items-center gap-2">
+                         <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.998 6.5h-10v-2h10v2Zm-10 5.5h7v-2h-7v2Zm13.5-3.002a2.5 2.5 0 0 0-2-2.45v7.953a2.5 2.5 0 0 0 2-2.45v-3.053Zm-13.5 8.502h4v-2h-4v2Z" fill="#34d399"/><path d="M18.498 11.998a4.5 4.5 0 0 1-8.996 0v-8a4.5 4.5 0 0 1 8.996 0v8Z" fill="#60a5fa"/></svg>
+                        <span class="text-slate-300">LangChain</span>
+                    </div>
+                    <!-- Django -->
+                    <div class="flex flex-col items-center gap-2">
+                        <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18.998h16v-14H4v14Zm2-12h12v10H6v-10Z" fill="#092E20"/><path d="M7 8.998h10v2H7v-2Zm0 4h5v2H7v-2Z" fill="#0C4B33"/></svg>
+                        <span class="text-slate-300">Django</span>
+                    </div>
+                    <!-- Vue.js -->
+                    <div class="flex flex-col items-center gap-2">
+                        <svg class="w-16 h-16" viewBox="0 0 256 221" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid"><path d="M204.8 0H256L128 220.8 0 0h97.92L128 51.2 157.44 0h47.36z" fill="#41B883"/><path d="M0 0l128 220.8L256 0h-51.2L128 132.48 50.56 0H0z" fill="#41B883"/><path d="M50.56 0L128 133.12 204.8 0h-47.36L128 51.2 97.92 0H50.56z" fill="#35495E"/></svg>
+                        <span class="text-slate-300">Vue.js</span>
+                    </div>
+                    <!-- Git -->
+                    <div class="flex flex-col items-center gap-2">
+                        <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.5 11.333a8.333 8.333 0 1 0-16.13 3.01M17.5 8.333l-5 5m0-5 5 5m-11.667 5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm8.334 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm-8.334 0h8.334" stroke="#F05033" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="text-slate-300">Git</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 项目区域 (Projects Section) -->
+            <section id="projects" class="mb-24 md:mb-40 fade-in-section">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">我的精选项目</h2>
+                <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Loading or error message will be shown here -->
+                </div>
+            </section>
+            
+            <!-- 游戏区域 (Game Section) -->
+            <section id="game" class="mb-24 md:mb-40 fade-in-section">
+                 <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">放松一下：贪吃蛇</h2>
+                 <div class="glassmorphism rounded-2xl p-4 sm:p-6 md:p-8 max-w-lg mx-auto text-center">
+                    <div id="score" class="text-xl sm:text-2xl font-bold text-white mb-4">分数: 0</div>
+                    <canvas id="gameCanvas" class="rounded-lg mx-auto"></canvas>
+                    <div id="game-controls" class="mt-4">
+                        <p class="text-slate-300 text-base sm:text-lg mb-4">点击“开始游戏”并使用方向键或下方按钮控制</p>
+                        <button id="startGameButton" class="bg-indigo-500 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-400 transition duration-300 transform hover:scale-105">
+                            开始游戏
+                        </button>
+                    </div>
+                    <!-- 移动端游戏控制器 -->
+                    <div id="mobile-game-controls" class="hidden mt-4 text-white text-2xl">
+                        <div class="flex justify-center mb-2">
+                            <button id="up-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600">↑</button>
+                        </div>
+                        <div class="flex justify-center">
+                            <button id="left-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600">←</button>
+                            <button id="down-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600">↓</button>
+                            <button id="right-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600">→</button>
+                        </div>
+                    </div>
+                 </div>
+            </section>
+
+
+            <!-- 联系我区域 (Contact Section) -->
+            <section id="contact" class="text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">与我联系</h2>
+                <p class="text-slate-400 mb-8 max-w-2xl mx-auto">
+                    我随时乐于接受新的挑战和合作机会。如果你有一个有趣的想法，或者只是想打个招呼，请随时给我发邮件。
+                </p>
+                <a href="mailto:isaleafa@163.com" class="bg-transparent border-2 border-teal-500 text-teal-500 font-bold py-3 px-8 rounded-full hover:bg-teal-500 hover:text-white transition duration-300 transform hover:scale-105 inline-block">
+                    发送邮件
+                </a>
+            </section>
+
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="text-center text-slate-500 mt-24 md:mt-32 py-8 border-t border-slate-800">
+            <p>&copy; 2025 Isaleafa. 保留所有权利。</p>
+        </footer>
+
+    </div>
+    
+    <!-- 游戏结束弹窗 -->
+    <div id="gameOverModal" class="hidden fixed inset-0 items-center justify-center z-50 p-4">
+        <div class="relative text-center text-white p-8 rounded-lg glassmorphism max-w-sm w-full">
+            <button id="closeModalButton" class="absolute top-2 right-3 text-gray-400 hover:text-white text-3xl font-bold transition-transform duration-200 hover:scale-125">&times;</button>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4">游戏结束!</h2>
+            <p id="finalScore" class="text-lg sm:text-xl mb-6">你的最终分数是: 0</p>
+            <button id="restartButton" class="bg-teal-500 text-white font-bold py-3 px-8 rounded-full hover:bg-teal-400 transition duration-300 transform hover:scale-105">
+                重新开始
+            </button>
+        </div>
+    </div>
+
+
+    <!-- 引入 particles.js 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <script>
+        // 初始化 particles.js
+        particlesJS('particles-js', { "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#ffffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": false }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out" } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "repulse": { "distance": 100 }, "push": { "particles_nb": 4 } } }, "retina_detect": true });
+        
+        // 鼠标跟随光标效果
+        const glow = document.querySelector('.cursor-glow');
+        if (window.matchMedia('(min-width: 768px)').matches) {
+            document.addEventListener('mousemove', (e) => {
+                glow.style.left = `${e.clientX}px`;
+                glow.style.top = `${e.clientY}px`;
+            });
+        }
+
+        // 移动端导航菜单
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // --- 滚动触发动画逻辑 ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, {
+            rootMargin: '0px',
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
+
+
+        // --- GitHub 项目获取逻辑 ---
+        async function fetchGithubProjects() {
+            const repoNames = ['isaleafa/Shell-Cpp-Dash', 'isaleafa/AIagent', 'isaleafa/Animal-Helper'];
+            const customDescriptions = {
+                'Shell-Cpp-Dash': '一个用 C++ 构建的高性能、轻量级命令行 Shell，旨在提供一个快速、流畅且可定制的终端交互体验。',
+                'AIagent': '探索大型语言模型潜力的智能代理程序。它能够理解并执行自然语言指令，旨在成为强大的个人数字助手。',
+                'Animal-Helper': '一款为宠物爱好者和动物救援者设计的移动应用。它提供信息查询、健康记录和社区互助功能，让关爱动物变得更简单。'
+            };
+            const projectsGrid = document.getElementById('projects-grid');
+            projectsGrid.innerHTML = '<p class="text-slate-400 text-center col-span-1 md:col-span-3">正在从 GitHub 加载指定的项目...</p>';
+            try {
+                const fetchPromises = repoNames.map(repoName => fetch(`https://api.github.com/repos/${repoName}`));
+                const responses = await Promise.all(fetchPromises);
+                for (const response of responses) {
+                    if (!response.ok) throw new Error(`GitHub API 请求失败: ${response.status}`);
+                }
+                const repos = await Promise.all(responses.map(res => res.json()));
+                projectsGrid.innerHTML = ''; 
+                repos.forEach(repo => {
+                    const description = customDescriptions[repo.name] || repo.description || '没有提供描述。';
+                    projectsGrid.innerHTML += `<div class="glassmorphism rounded-xl p-6 transform hover:-translate-y-2 transition duration-300 flex flex-col h-full"><div class="flex-grow"><h3 class="text-2xl font-bold text-white mb-2">${repo.name}</h3><p class="text-slate-400 mb-4">${description}</p></div><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="text-teal-400 hover:text-teal-300 font-semibold mt-auto">在 GitHub 上查看 &rarr;</a></div>`;
+                });
+            } catch (error) {
+                console.error('获取 GitHub 项目失败:', error);
+                projectsGrid.innerHTML = `<p class="text-slate-400 text-center col-span-1 md:col-span-3">加载项目失败。请检查仓库名称是否正确，或稍后再试。</p>`;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', fetchGithubProjects);
+
+        // --- 游戏逻辑 ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const gameOverModal = document.getElementById('gameOverModal');
+        const finalScoreElement = document.getElementById('finalScore');
+        const restartButton = document.getElementById('restartButton');
+        const startGameButton = document.getElementById('startGameButton');
+        const gameControls = document.getElementById('game-controls');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const mobileGameControls = document.getElementById('mobile-game-controls');
+        const upButton = document.getElementById('up-button');
+        const downButton = document.getElementById('down-button');
+        const leftButton = document.getElementById('left-button');
+        const rightButton = document.getElementById('right-button');
+
+        let gridSize = 20;
+        let snake, food, direction, score, gameInterval;
+        let isGameRunning = false;
+
+        function resizeCanvas() {
+            const size = canvas.clientWidth;
+            canvas.width = size;
+            canvas.height = size;
+            gridSize = size / 20; // 保持20x20的网格
+            if(isGameRunning) draw();
+        }
+
+        function initGameVariables() {
+            const headPosition = Math.floor(10 * (canvas.width / 400));
+            snake = [{ x: headPosition, y: headPosition }];
+            food = {};
+            direction = 'right';
+            score = 0;
+            scoreElement.textContent = `分数: ${score}`;
+        }
+
+        function generateFood() {
+            const cols = canvas.width / gridSize;
+            food = {
+                x: Math.floor(Math.random() * cols),
+                y: Math.floor(Math.random() * cols)
+            };
+            for (let segment of snake) {
+                if (segment.x === food.x && segment.y === food.y) {
+                    generateFood(); return;
+                }
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = '#0c1220';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            snake.forEach((segment, index) => {
+                ctx.fillStyle = index === 0 ? '#34d399' : '#2dd4bf';
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
+            });
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+        }
+
+        function update() {
+            if (!isGameRunning) return;
+            const head = { ...snake[0] };
+            switch (direction) {
+                case 'up': head.y -= 1; break;
+                case 'down': head.y += 1; break;
+                case 'left': head.x -= 1; break;
+                case 'right': head.x += 1; break;
+            }
+            const cols = canvas.width / gridSize;
+            if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= cols || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                gameOver(); return;
+            }
+            snake.unshift(head);
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                scoreElement.textContent = `分数: ${score}`;
+                generateFood();
+            } else {
+                snake.pop();
+            }
+            draw();
+        }
+        
+        function gameOver() {
+            isGameRunning = false;
+            clearInterval(gameInterval);
+            finalScoreElement.textContent = `你的最终分数是: ${score}`;
+            gameOverModal.classList.remove('hidden');
+            gameOverModal.classList.add('flex');
+        }
+
+        function setDirection(newDirection) {
+            if (!isGameRunning) return;
+            const goingUp = direction === 'up', goingDown = direction === 'down', goingLeft = direction === 'left', goingRight = direction === 'right';
+            if (newDirection === 'up' && !goingDown) direction = 'up';
+            if (newDirection === 'down' && !goingUp) direction = 'down';
+            if (newDirection === 'left' && !goingRight) direction = 'left';
+            if (newDirection === 'right' && !goingLeft) direction = 'right';
+        }
+
+        function handleKeydown(event) {
+            if (!isGameRunning) return;
+            const keyMap = { 'ArrowUp': 'up', 'w': 'up', 'ArrowDown': 'down', 's': 'down', 'ArrowLeft': 'left', 'a': 'left', 'ArrowRight': 'right', 'd': 'right' };
+            const newDirection = keyMap[event.key.toLowerCase()];
+            if (newDirection) {
+                event.preventDefault();
+                setDirection(newDirection);
+            }
+        }
+        
+        function startGame() {
+            isGameRunning = true;
+            gameControls.style.display = 'none';
+            mobileGameControls.classList.remove('hidden');
+            gameOverModal.classList.add('hidden');
+            gameOverModal.classList.remove('flex');
+            
+            initGameVariables();
+            generateFood();
+            clearInterval(gameInterval);
+            gameInterval = setInterval(update, 120); // 稍微减慢速度以适应触控
+            draw();
+        }
+
+        function closeGameOverModal() {
+            gameOverModal.classList.add('hidden');
+            gameOverModal.classList.remove('flex');
+            gameControls.style.display = 'block';
+            mobileGameControls.classList.add('hidden');
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        document.addEventListener('DOMContentLoaded', resizeCanvas);
+        document.addEventListener('keydown', handleKeydown);
+        startGameButton.addEventListener('click', startGame);
+        restartButton.addEventListener('click', startGame);
+        closeModalButton.addEventListener('click', closeGameOverModal);
+        upButton.addEventListener('click', () => setDirection('up'));
+        downButton.addEventListener('click', () => setDirection('down'));
+        leftButton.addEventListener('click', () => setDirection('left'));
+        rightButton.addEventListener('click', () => setDirection('right'));
+
+    </script>
+
+</body>
+</html>
