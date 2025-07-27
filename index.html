@@ -226,8 +226,15 @@
                     <div id="score" class="text-xl sm:text-2xl font-bold text-white mb-4">分数: 0</div>
                     <canvas id="gameCanvas" class="rounded-lg mx-auto"></canvas>
                     <div id="game-controls" class="mt-4">
-                        <p class="text-slate-300 text-base sm:text-lg mb-4">点击“开始游戏”并使用方向键或下方按钮控制</p>
-                        <button id="startGameButton" class="bg-indigo-500 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-400 transition duration-300 transform hover:scale-105">
+                        <p class="text-slate-300 text-base sm:text-lg mb-4">选择难度，然后开始游戏</p>
+                        <!-- 难度选择按钮 -->
+                        <div id="difficulty-selector" class="flex justify-center gap-2 sm:gap-3 mb-4 flex-wrap">
+                            <button data-difficulty="senior" class="difficulty-btn text-sm sm:text-base bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">老年</button>
+                            <button data-difficulty="easy" class="difficulty-btn text-sm sm:text-base bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">简单</button>
+                            <button data-difficulty="normal" class="difficulty-btn text-sm sm:text-base bg-indigo-500 text-white font-bold py-2 px-4 rounded-full transition duration-300">普通</button>
+                            <button data-difficulty="hard" class="difficulty-btn text-sm sm:text-base bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">困难</button>
+                        </div>
+                        <button id="startGameButton" class="bg-teal-500 text-white font-bold py-3 px-8 rounded-full hover:bg-teal-400 transition duration-300 transform hover:scale-105">
                             开始游戏
                         </button>
                     </div>
@@ -277,32 +284,26 @@
             </button>
         </div>
     </div>
+    
+    <!-- 关键改动：直接引入本地脚本 -->
+    <script src="particles.min.js"></script>
 
     <script>
-        // 动态加载桌面端专属特效
-        function loadDesktopEffects() {
-            // 鼠标跟随光标效果
-            const glow = document.querySelector('.cursor-glow');
+        // 鼠标跟随光标效果 (仅在桌面端有效)
+        const glow = document.querySelector('.cursor-glow');
+        if (window.matchMedia('(min-width: 768px)').matches) {
             document.addEventListener('mousemove', (e) => {
                 glow.style.left = `${e.clientX}px`;
                 glow.style.top = `${e.clientY}px`;
             });
-
-            // 动态创建并加载 particles.js 脚本
-            const particleScript = document.createElement('script');
-            // 关键改动：从本地加载脚本
-            particleScript.src = 'particles.min.js'; 
-            // 脚本加载完成后，再初始化粒子特效
-            particleScript.onload = () => {
-                particlesJS('particles-js', { "particles": { "number": { "value": 80, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#ffffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": false }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out" } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "repulse": { "distance": 100 }, "push": { "particles_nb": 4 } } }, "retina_detect": true });
-            };
-            document.body.appendChild(particleScript);
         }
+        
+        // 无条件初始化粒子特效
+        // 确保DOM加载完成后再执行，避免找不到 #particles-js
+        document.addEventListener('DOMContentLoaded', () => {
+            particlesJS('particles-js', { "particles": { "number": { "value": 80, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#ffffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": false }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out" } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "repulse": { "distance": 100 }, "push": { "particles_nb": 4 } } }, "retina_detect": true });
+        });
 
-        // 检查是否为桌面端，是则加载
-        if (window.matchMedia('(min-width: 768px)').matches) {
-            loadDesktopEffects();
-        }
 
         // 移动端导航菜单
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -375,10 +376,26 @@
         const downButton = document.getElementById('down-button');
         const leftButton = document.getElementById('left-button');
         const rightButton = document.getElementById('right-button');
+        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+
+        const speeds = { senior: 300, easy: 150, normal: 100, hard: 60 };
+        let currentDifficulty = 'normal';
 
         let gridSize = 20;
         let snake, food, direction, score, gameInterval;
         let isGameRunning = false;
+        
+        difficultyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                currentDifficulty = button.dataset.difficulty;
+                difficultyButtons.forEach(btn => {
+                    btn.classList.remove('bg-indigo-500');
+                    btn.classList.add('bg-gray-700');
+                });
+                button.classList.add('bg-indigo-500');
+                button.classList.remove('bg-gray-700');
+            });
+        });
 
         function resizeCanvas() {
             const size = canvas.clientWidth;
@@ -482,7 +499,8 @@
             initGameVariables();
             generateFood();
             clearInterval(gameInterval);
-            gameInterval = setInterval(update, 120); // 稍微减慢速度以适应触控
+            const gameSpeed = speeds[currentDifficulty];
+            gameInterval = setInterval(update, gameSpeed);
             draw();
         }
 
