@@ -1,0 +1,438 @@
+/* 自定义样式 */
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* 流星雨效果 */
+.meteor {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: linear-gradient(45deg, #fff, transparent);
+    border-radius: 50%;
+    animation: meteor 3s linear infinite;
+    opacity: 0;
+}
+
+@keyframes meteor {
+    0% {
+        opacity: 1;
+        transform: translateX(-100px) translateY(-100px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(300px) translateY(300px);
+    }
+}
+
+/* 打字机效果 */
+.typewriter {
+    overflow: hidden;
+    border-right: 3px solid #14b8a6;
+    white-space: nowrap;
+    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: #14b8a6; }
+}
+
+/* 粒子特效容器 */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -2;
+}
+
+/* 鼠标跟随光标效果 */
+.cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(45, 212, 191, 0.15) 0%, rgba(45, 212, 191, 0) 60%);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+/* 渐变标题 */
+.gradient-text {
+    background: linear-gradient(to right, #34d399, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+/* 卡片和游戏容器的玻璃拟态效果 */
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 游戏画布 */
+#gameCanvas {
+    background-color: #0c1220;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 1 / 1; /* 保持正方形 */
+}
+
+/* 游戏结束弹窗 */
+#gameOverModal {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* 确保内容在特效之上 */
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+/* 滚动触发动画 */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-in-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 加载状态样式 */
+.loading {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* 错误状态样式 */
+.error {
+    color: #f87171;
+    border: 1px solid #f87171;
+    background: rgba(248, 113, 113, 0.1);
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+/* 3D卡片翻转效果 */
+.card-3d {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.card-3d:hover {
+    transform: rotateY(10deg) rotateX(5deg);
+}
+
+.card-flip {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+}
+
+.card-flip:hover {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 1rem;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+/* 技能卡片样式 */
+.skill-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(20, 184, 166, 0.05) 0%, 
+        rgba(96, 165, 250, 0.05) 50%,
+        rgba(168, 85, 247, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 16px;
+}
+
+.skill-card:hover::before {
+    opacity: 1;
+}
+
+.skill-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(20, 184, 166, 0.2);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(20, 184, 166, 0.1);
+}
+
+.skill-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.skill-card:hover .skill-icon-wrapper {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.1);
+}
+
+.skill-icon {
+    width: 40px;
+    height: 40px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.skill-card:hover .skill-icon {
+    filter: drop-shadow(0 8px 16px rgba(20, 184, 166, 0.3));
+}
+
+.skill-name {
+    color: #e2e8f0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.skill-card:hover .skill-name {
+    color: #14b8a6;
+    transform: translateY(-2px);
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+    .skill-card {
+        padding: 20px 12px;
+        gap: 10px;
+    }
+    
+    .skill-icon-wrapper {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .skill-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .skill-name {
+        font-size: 0.8rem;
+    }
+}
+
+/* 浮动动画 */
+.float-animation {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* 柔和脉冲光环效果 */
+.pulse-ring {
+    position: relative;
+}
+
+.pulse-ring::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(20, 184, 166, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: soft-pulse 4s infinite;
+    opacity: 0;
+}
+
+@keyframes soft-pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.3;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* 柔和霓虹灯文字效果 */
+.neon-text {
+    color: #ffffff;
+    text-shadow: 
+        0 0 3px rgba(20, 184, 166, 0.5),
+        0 0 6px rgba(20, 184, 166, 0.3),
+        0 0 9px rgba(20, 184, 166, 0.2);
+    animation: soft-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes soft-glow {
+    0% {
+        text-shadow: 
+            0 0 3px rgba(20, 184, 166, 0.5),
+            0 0 6px rgba(20, 184, 166, 0.3),
+            0 0 9px rgba(20, 184, 166, 0.2);
+    }
+    100% {
+        text-shadow: 
+            0 0 5px rgba(20, 184, 166, 0.7),
+            0 0 10px rgba(20, 184, 166, 0.4),
+            0 0 15px rgba(20, 184, 166, 0.2);
+    }
+}
+
+/* 项目卡片悬停效果 */
+.project-card {
+    transition: all 0.4s ease;
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.project-card:hover::before {
+    left: 100%;
+}
+
+.project-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+/* 按钮发光效果 */
+.glow-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.glow-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s;
+}
+
+.glow-button:hover::before {
+    left: 100%;
+}
+
+.glow-button:hover {
+    box-shadow: 0 0 20px rgba(20, 184, 166, 0.6);
+    transform: scale(1.05);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .cursor-glow {
+        display: none;
+    }
+    
+    .skill-icon:hover {
+        transform: translateY(-5px) scale(1.05);
+    }
+    
+    .project-card:hover {
+        transform: translateY(-5px) scale(1.01);
+    }
+    
+    .meteor {
+        display: none;
+    }
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音频文件测试</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        .audio-player {
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .info { background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; }
+        .file-info {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin: 5px 0;
+        }
+        button {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(20, 184, 166, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 音频文件测试页面</h1>
+        
+        <div class="test-section">
+            <h2>📁 文件放置说明</h2>
+            <div class="info status">
+                <strong>请将你的三个FLAC文件按以下方式重命名并放置：</strong>
+                <ul>
+                    <li><code>track1.flac</code> → 放置到 <code>assets/audio/bgm/</code> 目录</li>
+                    <li><code>track2.flac</code> → 放置到 <code>assets/audio/bgm/</code> 目录</li>
+                    <li><code>track3.flac</code> → 放置到 <code>assets/audio/bgm/</code> 目录</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎶 音频文件测试</h2>
+            
+            <div id="track1-section">
+                <h3>音乐作品 1</h3>
+                <div class="file-info">文件路径: assets/audio/bgm/track1.flac</div>
+                <audio id="track1" class="audio-player" controls preload="metadata">
+                    <source src="bgm/track1.flac" type="audio/flac">
+                    你的浏览器不支持音频播放。
+                </audio>
+                <div id="track1-status" class="status info">等待测试...</div>
+            </div>
+
+            <div id="track2-section">
+                <h3>音乐作品 2</h3>
+                <div class="file-info">文件路径: assets/audio/bgm/track2.flac</div>
+                <audio id="track2" class="audio-player" controls preload="metadata">
+                    <source src="bgm/track2.flac" type="audio/flac">
+                    你的浏览器不支持音频播放。
+                </audio>
+                <div id="track2-status" class="status info">等待测试...</div>
+            </div>
+
+            <div id="track3-section">
+                <h3>音乐作品 3</h3>
+                <div class="file-info">文件路径: assets/audio/bgm/track3.flac</div>
+                <audio id="track3" class="audio-player" controls preload="metadata">
+                    <source src="bgm/track3.flac" type="audio/flac">
+                    你的浏览器不支持音频播放。
+                </audio>
+                <div id="track3-status" class="status info">等待测试...</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 测试控制</h2>
+            <button onclick="testAllFiles()">测试所有文件</button>
+            <button onclick="checkBrowserSupport()">检查浏览器支持</button>
+            <button onclick="location.reload()">刷新页面</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 测试结果</h2>
+            <div id="overall-status" class="status info">
+                点击"测试所有文件"开始检测...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 测试单个音频文件
+        function testAudioFile(audioId, statusId) {
+            const audio = document.getElementById(audioId);
+            const status = document.getElementById(statusId);
+            
+            return new Promise((resolve) => {
+                // 重置状态
+                status.className = 'status info';
+                status.textContent = '正在测试...';
+                
+                // 设置事件监听器
+                const onLoadedData = () => {
+                    status.className = 'status success';
+                    status.innerHTML = `
+                        ✅ 文件加载成功！<br>
+                        时长: ${Math.floor(audio.duration / 60)}:${Math.floor(audio.duration % 60).toString().padStart(2, '0')}<br>
+                        可以播放: 是
+                    `;
+                    cleanup();
+                    resolve(true);
+                };
+                
+                const onError = (e) => {
+                    status.className = 'status error';
+                    status.innerHTML = `
+                        ❌ 文件加载失败！<br>
+                        错误: ${e.target.error ? e.target.error.message : '文件不存在或格式不支持'}<br>
+                        建议: 检查文件路径和格式
+                    `;
+                    cleanup();
+                    resolve(false);
+                };
+                
+                const cleanup = () => {
+                    audio.removeEventListener('loadeddata', onLoadedData);
+                    audio.removeEventListener('error', onError);
+                };
+                
+                // 添加事件监听器
+                audio.addEventListener('loadeddata', onLoadedData);
+                audio.addEventListener('error', onError);
+                
+                // 开始加载
+                audio.load();
+                
+                // 超时处理
+                setTimeout(() => {
+                    if (status.textContent === '正在测试...') {
+                        status.className = 'status error';
+                        status.innerHTML = `
+                            ⏰ 加载超时！<br>
+                            可能原因: 文件不存在或网络问题<br>
+                            建议: 检查文件是否正确放置
+                        `;
+                        cleanup();
+                        resolve(false);
+                    }
+                }, 10000);
+            });
+        }
+        
+        // 测试所有文件
+        async function testAllFiles() {
+            const overallStatus = document.getElementById('overall-status');
+            overallStatus.className = 'status info';
+            overallStatus.textContent = '正在测试所有音频文件...';
+            
+            const results = await Promise.all([
+                testAudioFile('track1', 'track1-status'),
+                testAudioFile('track2', 'track2-status'),
+                testAudioFile('track3', 'track3-status')
+            ]);
+            
+            const successCount = results.filter(r => r).length;
+            const totalCount = results.length;
+            
+            if (successCount === totalCount) {
+                overallStatus.className = 'status success';
+                overallStatus.innerHTML = `
+                    🎉 所有音频文件测试通过！<br>
+                    成功: ${successCount}/${totalCount}<br>
+                    你的音乐播放器现在可以正常使用了！
+                `;
+            } else {
+                overallStatus.className = 'status error';
+                overallStatus.innerHTML = `
+                    ⚠️ 部分音频文件有问题<br>
+                    成功: ${successCount}/${totalCount}<br>
+                    请检查失败的文件并重新放置
+                `;
+            }
+        }
+        
+        // 检查浏览器支持
+        function checkBrowserSupport() {
+            const audio = document.createElement('audio');
+            const formats = {
+                'FLAC': 'audio/flac',
+                'MP3': 'audio/mpeg',
+                'WAV': 'audio/wav',
+                'OGG': 'audio/ogg'
+            };
+            
+            let supportInfo = '<strong>浏览器音频格式支持情况:</strong><br>';
+            
+            for (const [format, mimeType] of Object.entries(formats)) {
+                const canPlay = audio.canPlayType(mimeType);
+                const support = canPlay === 'probably' ? '✅ 完全支持' : 
+                               canPlay === 'maybe' ? '⚠️ 可能支持' : '❌ 不支持';
+                supportInfo += `${format}: ${support}<br>`;
+            }
+            
+            const overallStatus = document.getElementById('overall-status');
+            overallStatus.className = 'status info';
+            overallStatus.innerHTML = supportInfo;
+        }
+        
+        // 页面加载完成后自动检查浏览器支持
+        window.addEventListener('load', () => {
+            checkBrowserSupport();
+        });
+    </script>
+</body>
+</html>

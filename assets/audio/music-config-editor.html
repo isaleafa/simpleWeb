@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐配置编辑器</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .editor-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        .track-editor {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #14b8a6;
+            box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        button {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(20, 184, 166, 0.4);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .info { background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; }
+        .preview-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        .track-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .track-number {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 音乐配置编辑器</h1>
+        <p>在这里编辑你的音乐播放列表信息，修改后点击保存即可应用到播放器中。</p>
+        
+        <div class="editor-section">
+            <h2>🎶 播放列表编辑</h2>
+            <div id="tracks-container">
+                <!-- 歌曲编辑器将在这里动态生成 -->
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button onclick="addNewTrack()">➕ 添加新歌曲</button>
+                <button onclick="loadConfig()" class="btn-secondary">🔄 重新加载</button>
+                <button onclick="saveConfig()">💾 保存配置</button>
+                <button onclick="exportConfig()" class="btn-secondary">📤 导出配置</button>
+            </div>
+        </div>
+        
+        <div class="editor-section">
+            <h2>⚙️ 播放器设置</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>默认音量 (0-1)</label>
+                    <input type="number" id="defaultVolume" min="0" max="1" step="0.1" value="0.3">
+                </div>
+                <div class="form-group">
+                    <label>自动播放</label>
+                    <select id="autoPlay" style="width: 100%; padding: 10px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white;">
+                        <option value="false">关闭</option>
+                        <option value="true">开启</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="editor-section">
+            <h2>📋 配置预览</h2>
+            <div class="preview-section" id="config-preview">
+                <!-- 配置预览将在这里显示 -->
+            </div>
+        </div>
+        
+        <div id="status-message" class="status info" style="display: none;">
+            <!-- 状态消息将在这里显示 -->
+        </div>
+    </div>
+
+    <script>
+        let currentConfig = {
+            playlist: [],
+            settings: {
+                defaultVolume: 0.3,
+                autoPlay: false,
+                shuffle: false,
+                repeat: "none"
+            }
+        };
+
+        // 页面加载时自动加载配置
+        window.addEventListener('load', () => {
+            loadConfig();
+        });
+
+        // 加载配置文件
+        async function loadConfig() {
+            try {
+                const response = await fetch('music-config.json');
+                currentConfig = await response.json();
+                renderTrackEditors();
+                renderSettings();
+                updatePreview();
+                showStatus('✅ 配置加载成功！', 'success');
+            } catch (error) {
+                console.error('加载配置失败:', error);
+                showStatus('❌ 配置加载失败，使用默认配置', 'error');
+                renderTrackEditors();
+                renderSettings();
+            }
+        }
+
+        // 渲染歌曲编辑器
+        function renderTrackEditors() {
+            const container = document.getElementById('tracks-container');
+            container.innerHTML = '';
+
+            currentConfig.playlist.forEach((track, index) => {
+                const trackEditor = createTrackEditor(track, index);
+                container.appendChild(trackEditor);
+            });
+        }
+
+        // 创建单个歌曲编辑器
+        function createTrackEditor(track, index) {
+            const div = document.createElement('div');
+            div.className = 'track-editor';
+            div.innerHTML = `
+                <div class="track-header">
+                    <span class="track-number">歌曲 ${index + 1}</span>
+                    <button onclick="removeTrack(${index})" class="btn-danger">🗑️ 删除</button>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>歌曲标题</label>
+                        <input type="text" value="${track.title || ''}" onchange="updateTrack(${index}, 'title', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>艺术家</label>
+                        <input type="text" value="${track.artist || ''}" onchange="updateTrack(${index}, 'artist', this.value)">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>专辑名称</label>
+                        <input type="text" value="${track.album || ''}" onchange="updateTrack(${index}, 'album', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>时长</label>
+                        <input type="text" value="自动从音频文件获取" disabled style="opacity: 0.6;">
+                        <small style="color: #94a3b8; font-size: 0.8rem;">时长将自动从音频文件中读取</small>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>音频文件路径</label>
+                        <input type="text" value="${track.src || ''}" onchange="updateTrack(${index}, 'src', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>封面图片路径</label>
+                        <input type="text" value="${track.cover || ''}" onchange="updateTrack(${index}, 'cover', this.value)">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>描述</label>
+                    <textarea rows="2" onchange="updateTrack(${index}, 'description', this.value)">${track.description || ''}</textarea>
+                </div>
+            `;
+            return div;
+        }
+
+        // 渲染设置
+        function renderSettings() {
+            document.getElementById('defaultVolume').value = currentConfig.settings.defaultVolume;
+            document.getElementById('autoPlay').value = currentConfig.settings.autoPlay;
+        }
+
+        // 更新歌曲信息
+        function updateTrack(index, field, value) {
+            if (!currentConfig.playlist[index]) {
+                currentConfig.playlist[index] = {};
+            }
+            currentConfig.playlist[index][field] = value;
+            updatePreview();
+        }
+
+        // 添加新歌曲
+        function addNewTrack() {
+            const newTrack = {
+                id: `track${currentConfig.playlist.length + 1}`,
+                title: "新歌曲",
+                artist: "Isaleafa",
+                album: "个人作品集",
+                cover: "assets/images/avatar.jpg",
+                src: `assets/audio/bgm/track${currentConfig.playlist.length + 1}.flac`,
+                duration: "0:00",
+                description: "请编辑歌曲信息"
+            };
+            
+            currentConfig.playlist.push(newTrack);
+            renderTrackEditors();
+            updatePreview();
+            showStatus('✅ 新歌曲已添加！', 'success');
+        }
+
+        // 删除歌曲
+        function removeTrack(index) {
+            if (confirm('确定要删除这首歌曲吗？')) {
+                currentConfig.playlist.splice(index, 1);
+                renderTrackEditors();
+                updatePreview();
+                showStatus('✅ 歌曲已删除！', 'success');
+            }
+        }
+
+        // 更新预览
+        function updatePreview() {
+            // 更新设置
+            currentConfig.settings.defaultVolume = parseFloat(document.getElementById('defaultVolume').value);
+            currentConfig.settings.autoPlay = document.getElementById('autoPlay').value === 'true';
+            
+            const preview = document.getElementById('config-preview');
+            preview.textContent = JSON.stringify(currentConfig, null, 2);
+        }
+
+        // 保存配置
+        function saveConfig() {
+            const configText = JSON.stringify(currentConfig, null, 2);
+            const blob = new Blob([configText], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'music-config.json';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            showStatus('💾 配置文件已下载！请将其替换到 assets/audio/ 目录中', 'success');
+        }
+
+        // 导出配置
+        function exportConfig() {
+            const configText = JSON.stringify(currentConfig, null, 2);
+            navigator.clipboard.writeText(configText).then(() => {
+                showStatus('📋 配置已复制到剪贴板！', 'success');
+            }).catch(() => {
+                showStatus('❌ 复制失败，请手动复制预览区域的内容', 'error');
+            });
+        }
+
+        // 显示状态消息
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status-message');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // 监听输入变化，实时更新预览
+        document.addEventListener('input', (e) => {
+            if (e.target.id === 'defaultVolume' || e.target.id === 'autoPlay') {
+                updatePreview();
+            }
+        });
+    </script>
+</body>
+</html>

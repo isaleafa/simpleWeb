@@ -1,0 +1,37 @@
+{
+  "playlist": [
+    {
+      "id": "track1",
+      "title": "尽头",
+      "artist": "赵方倩",
+      "album": "个人作品集",
+      "cover": "assets/audio/sfx/1.webp",
+      "src": "assets/audio/bgm/track1.flac",
+      "description": "一首宁静优美的音乐作品"
+    },
+    {
+      "id": "track2", 
+      "title": "步步",
+      "artist": "五月天",
+      "album": "个人作品集",
+      "cover": "assets/audio/sfx/2.webp",
+      "src": "assets/audio/bgm/track2.flac",
+      "description": "轻快愉悦的旋律"
+    },
+    {
+      "id": "track3",
+      "title": "你应该藏在心里", 
+      "artist": "陈楚生",
+      "album": "个人作品集",
+      "cover": "assets/audio/sfx/3.webp",
+      "src": "assets/audio/bgm/track3.flac",
+      "description": "现代电子音乐风格"
+    }
+  ],
+  "settings": {
+    "defaultVolume": 0.1,
+    "autoPlay": false,
+    "shuffle": false,
+    "repeat": "none"
+  }
+}

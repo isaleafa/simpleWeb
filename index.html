@@ -5,102 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Isaleafa的个人主页</title>
     
-    <!-- 引入 Tailwind CSS for styling -->
+    <!-- 网站图标 -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="assets/js/particles.min.js" as="script">
+    <link rel="preload" href="assets/images/avatar.jpg" as="image">
+    
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 引入 Google Fonts for modern typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- 引入本地 Inter 字体 -->
+    <link rel="stylesheet" href="assets/css/inter-font.css">
     
-    <style>
-        /* 自定义样式 */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0a0a;
-            color: #e2e8f0;
-        }
-
-        /* 粒子特效容器 */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -2;
-        }
-        
-        /* 鼠标跟随光标效果 */
-        .cursor-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(45, 212, 191, 0.15) 0%, rgba(45, 212, 191, 0) 60%);
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
-            z-index: -1;
-        }
-
-        /* 渐变标题 */
-        .gradient-text {
-            background: linear-gradient(to right, #34d399, #60a5fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-        }
-
-        /* 卡片和游戏容器的玻璃拟态效果 */
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* 平滑滚动 */
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        /* 游戏画布 */
-        #gameCanvas {
-            background-color: #0c1220;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 1 / 1; /* 保持正方形 */
-        }
-        
-        /* 游戏结束弹窗 */
-        #gameOverModal {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-
-        /* 确保内容在特效之上 */
-        .content-wrapper {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* 滚动触发动画 */
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <!-- 引入音乐播放器样式 -->
+    <link rel="stylesheet" href="assets/css/music-player.css">
 </head>
 <body class="overflow-x-hidden">
 
@@ -109,6 +32,7 @@
 
     <!-- 鼠标跟随光标的 div -->
     <div class="cursor-glow"></div>
+
 
     <!-- 主容器 -->
     <div class="content-wrapper container mx-auto px-6 md:px-12 py-8">
@@ -126,7 +50,7 @@
             </nav>
             <!-- 移动端汉堡菜单按钮 -->
             <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-white focus:outline-none">
+                <button id="mobile-menu-button" class="text-white focus:outline-none" aria-label="打开菜单">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>
@@ -146,7 +70,7 @@
             <!-- 英雄区域 (Hero Section) -->
             <section class="text-center mb-24 md:mb-40 fade-in-section">
                 <h1 class="text-5xl sm:text-6xl md:text-7xl font-black mb-4 leading-tight">
-                    <span class="gradient-text">代码构建世界</span><br>
+                    <span class="gradient-text typewriter">代码构建世界</span><br>
                     <span class="text-white">智能驱动未来</span>
                 </h1>
                 <p class="text-base sm:text-lg text-slate-400 max-w-3xl mx-auto mb-8">
@@ -160,7 +84,7 @@
             <!-- 关于我区域 (About Section) -->
             <section id="about" class="mb-24 md:mb-40 flex flex-col md:flex-row items-center gap-8 md:gap-12 fade-in-section">
                 <div class="w-full md:w-1/2 flex justify-center">
-                    <img src="avatar.jpg" alt="个人头像" class="rounded-full w-48 h-48 md:w-64 md:h-64 shadow-2xl shadow-teal-500/20 object-cover">
+                    <img src="assets/images/avatar.jpg" alt="Isaleafa的个人头像" class="rounded-full w-48 h-48 md:w-64 md:h-64 shadow-2xl shadow-teal-500/20 object-cover" loading="lazy">
                 </div>
                 <div class="w-full md:w-1/2 text-center md:text-left">
                     <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">关于我</h2>
@@ -176,37 +100,75 @@
 
             <!-- 技能区域 (Skills Section) -->
             <section id="skills" class="mb-24 md:mb-40 fade-in-section">
-                <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">我的技能</h2>
-                <div class="max-w-4xl mx-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-8 text-center">
-                    <!-- Python -->
-                    <div class="flex flex-col items-center gap-2">
-                        <svg class="w-16 h-16" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><path fill="#4B8BBE" d="M64 128a64 64 0 0 1-64-64h64z"/><path fill="#FFD43B" d="M64 0a64 64 0 0 1 64 64H64z"/><path fill="#FFFFFF" d="M50.4 89.6a8 8 0 1 1-16 0 8 8 0 0 1 16 0zm27.2-51.2a8 8 0 1 1-16 0 8 8 0 0 1 16 0z"/></svg>
-                        <span class="text-slate-300">Python</span>
-                    </div>
-                    <!-- C++ -->
-                    <div class="flex flex-col items-center gap-2">
-                        <svg class="w-16 h-16" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><path fill="#00599C" d="M64 0C28.7 0 0 28.7 0 64s28.7 64 64 64 64-28.7 64-64S99.3 0 64 0zm0 120C33.1 120 8 94.9 8 64S33.1 8 64 8s56 25.1 56 56-25.1 56-56 56z"/><path fill="#0082C3" d="M48 48h32v32H48z"/><path fill="#FFFFFF" d="M65.6 40h-3.2v14.4h-16V56h16v14.4h3.2V56h16V40h-16zm-3.2 3.2h12.8v12.8h-12.8zM46.4 72h-3.2v14.4h-16V88h16v14.4h3.2V88h16V72h-16zm-3.2 3.2h12.8v12.8h-12.8z"/></svg>
-                        <span class="text-slate-300">C++</span>
-                    </div>
-                    <!-- Langchain -->
-                    <div class="flex flex-col items-center gap-2">
-                         <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.998 6.5h-10v-2h10v2Zm-10 5.5h7v-2h-7v2Zm13.5-3.002a2.5 2.5 0 0 0-2-2.45v7.953a2.5 2.5 0 0 0 2-2.45v-3.053Zm-13.5 8.502h4v-2h-4v2Z" fill="#34d399"/><path d="M18.498 11.998a4.5 4.5 0 0 1-8.996 0v-8a4.5 4.5 0 0 1 8.996 0v8Z" fill="#60a5fa"/></svg>
-                        <span class="text-slate-300">LangChain</span>
-                    </div>
-                    <!-- Django -->
-                    <div class="flex flex-col items-center gap-2">
-                        <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18.998h16v-14H4v14Zm2-12h12v10H6v-10Z" fill="#092E20"/><path d="M7 8.998h10v2H7v-2Zm0 4h5v2H7v-2Z" fill="#0C4B33"/></svg>
-                        <span class="text-slate-300">Django</span>
-                    </div>
-                    <!-- Vue.js -->
-                    <div class="flex flex-col items-center gap-2">
-                        <svg class="w-16 h-16" viewBox="0 0 256 221" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid"><path d="M204.8 0H256L128 220.8 0 0h97.92L128 51.2 157.44 0h47.36z" fill="#41B883"/><path d="M0 0l128 220.8L256 0h-51.2L128 132.48 50.56 0H0z" fill="#41B883"/><path d="M50.56 0L128 133.12 204.8 0h-47.36L128 51.2 97.92 0H50.56z" fill="#35495E"/></svg>
-                        <span class="text-slate-300">Vue.js</span>
-                    </div>
-                    <!-- Git -->
-                    <div class="flex flex-col items-center gap-2">
-                        <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.5 11.333a8.333 8.333 0 1 0-16.13 3.01M17.5 8.333l-5 5m0-5 5 5m-11.667 5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm8.334 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm-8.334 0h8.334" stroke="#F05033" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <span class="text-slate-300">Git</span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-16">我的技能</h2>
+                <div class="max-w-5xl mx-auto">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
+                        <!-- Python -->
+                        <div class="skill-card group">
+                            <div class="skill-icon-wrapper">
+                                <svg class="skill-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-label="Python">
+                                    <path fill="#3776ab" d="M49.33 62h29.159C86.606 62 93 55.132 93 46.981V19.638c0-7.021-6.245-12.28-13.756-13.571-5.296-.86-10.991-.838-16.248 0C54.056 7.757 49.33 13.877 49.33 19.638v10.36h29.159v3.676H44.99c-8.01 0-15.016 4.835-17.194 14.04-2.51 10.564-2.624 17.14 0 28.292 1.953 8.265 6.625 14.04 14.635 14.04h9.468v-12.568c0-9.094 7.864-17.133 17.194-17.133zm-1.838-39.11c-2.676 0-4.85-2.205-4.85-4.918 0-2.713 2.174-4.918 4.85-4.918 2.676 0 4.85 2.205 4.85 4.918 0 2.713-2.174 4.918-4.85 4.918z"/>
+                                    <path fill="#ffd43b" d="M78.67 66h-29.159C41.394 66 35 72.868 35 81.019v27.343c0 7.021 6.245 12.28 13.756 13.571 5.296.86 10.991.838 16.248 0C73.944 120.243 78.67 114.123 78.67 108.362V98.002H49.511v-3.676H83.01c8.01 0 15.016-4.835 17.194-14.04 2.51-10.564 2.624-17.14 0-28.292-1.953-8.265-6.625-14.04-14.635-14.04H78.67v12.568c0 9.094-7.864 17.133-17.194 17.133zm1.838 39.11c2.676 0 4.85 2.205 4.85 4.918 0 2.713-2.174 4.918-4.85 4.918-2.676 0-4.85-2.205-4.85-4.918 0-2.713 2.174-4.918 4.85-4.918z"/>
+                                </svg>
+                            </div>
+                            <span class="skill-name">Python</span>
+                        </div>
+                        
+                        <!-- C++ -->
+                        <div class="skill-card group">
+                            <div class="skill-icon-wrapper">
+                                <svg class="skill-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-label="C++">
+                                    <path fill="#00599c" d="M117.5 33.5l.3-.2c-.6-1.1-1.5-2.1-2.4-2.6L64.4 1.4c-1.2-.6-2.6-.6-3.8 0L9.7 30.7c-1.1.6-2.2 1.8-2.6 3.1l-.1.2v.3c-.1.5-.1 1.1 0 1.6v55c0 1.3.7 2.5 1.8 3.2l50.9 29.3c1.2.6 2.6.6 3.8 0l50.9-29.3c1.1-.6 1.8-1.9 1.8-3.2v-55c0-.6 0-1.2-.2-1.7zM64 88.5c9.1 0 17.1-5 21.3-12.4l12.9 7.6c-6.8 11.8-19.6 19.8-34.2 19.8-21.8 0-39.5-17.7-39.5-39.5S42.2 24.5 64 24.5c14.7 0 27.5 8.1 34.3 20l-13 7.5C81.1 44.5 73.1 39.5 64 39.5c-13.5 0-24.5 11-24.5 24.5s11 24.5 24.5 24.5z"/>
+                                    <path fill="#004482" d="M85.3 76.1C81.1 83.5 73.1 88.5 64 88.5c-13.5 0-24.5-11-24.5-24.5s11-24.5 24.5-24.5c9.1 0 17.1 5 21.3 12.4l13-7.5c-6.8-11.9-19.6-20-34.3-20-21.8 0-39.5 17.7-39.5 39.5S42.2 103.5 64 103.5c14.6 0 27.4-8 34.2-19.8l-12.9-7.6z"/>
+                                    <path fill="#00599c" d="M82.1 61.8h5.2v-5.3h4.4v5.3H97v4.4h-5.3v5.2h-4.4v-5.2h-5.2v-4.4zm24.4 0h5.2v-5.3h4.4v5.3h5.3v4.4h-5.3v5.2h-4.4v-5.2h-5.2v-4.4z"/>
+                                </svg>
+                            </div>
+                            <span class="skill-name">C++</span>
+                        </div>
+                        
+                        <!-- LangChain -->
+                        <div class="skill-card group">
+                            <div class="skill-icon-wrapper">
+                                <svg class="skill-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="LangChain">
+                                    <circle cx="24" cy="24" r="20" fill="#1C3C3C"/>
+                                    <path fill="#87CEEB" d="M24 12c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 18c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z"/>
+                                    <path fill="#FFF" d="M24 20c-2.209 0-4 1.791-4 4s1.791 4 4 4 4-1.791 4-4-1.791-4-4-4z"/>
+                                </svg>
+                            </div>
+                            <span class="skill-name">LangChain</span>
+                        </div>
+                        
+                        <!-- Django -->
+                        <div class="skill-card group">
+                            <div class="skill-icon-wrapper">
+                                <svg class="skill-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-label="Django">
+                                    <path fill="#092e20" d="M59.448 0h20.93v96.88c-10.737 2.04-18.62 2.855-27.181 2.855-25.551 0-38.87-11.551-38.87-33.705 0-21.338 14.135-35.2 36.015-35.2 3.398 0 5.98.272 9.106 1.087zm0 48.765c-2.446-.815-4.485-1.087-7.067-1.087-10.6 0-16.717 6.523-16.717 17.939 0 11.145 5.845 17.26 16.582 17.26 2.31 0 4.892-.136 7.202-.543z"/>
+                                    <path fill="#092e20" d="M128 0v97.287c0 19.231-1.018 28.427-4.078 36.287-2.719 6.795-6.388 10.6-16.717 16.445l-18.98-9.106c10.329-5.437 13.997-8.835 16.58-14.679 2.719-6.116 3.602-13.997 3.602-32.315V0z"/>
+                                </svg>
+                            </div>
+                            <span class="skill-name">Django</span>
+                        </div>
+                        
+                        <!-- Vue.js -->
+                        <div class="skill-card group">
+                            <div class="skill-icon-wrapper">
+                                <svg class="skill-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-label="Vue.js">
+                                    <path fill="#41b883" d="M78.8,10L64,35.4L49.2,10H0l64,110L128,10H78.8z"/>
+                                    <path fill="#34495e" d="M78.8,10L64,35.4L49.2,10H25.6L64,76L102.4,10H78.8z"/>
+                                </svg>
+                            </div>
+                            <span class="skill-name">Vue.js</span>
+                        </div>
+                        
+                        <!-- Git -->
+                        <div class="skill-card group">
+                            <div class="skill-icon-wrapper">
+                                <svg class="skill-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-label="Git">
+                                    <path fill="#f34f29" d="M124.737 58.378L69.621 3.264c-3.172-3.174-8.32-3.174-11.497 0L46.68 14.71l14.518 14.518c3.375-1.139 7.243-.375 9.932 2.314 2.703 2.706 3.461 6.607 2.294 9.993l13.992 13.993c3.385-1.167 7.292-.413 9.994 2.295 3.78 3.777 3.78 9.9 0 13.679a9.673 9.673 0 01-13.683 0 9.677 9.677 0 01-2.105-10.521L68.574 47.933l-.002 34.341a9.708 9.708 0 012.559 1.828c3.778 3.777 3.778 9.898 0 13.683-3.779 3.777-9.904 3.777-13.679 0-3.778-3.784-3.778-9.905 0-13.683a9.65 9.65 0 013.167-2.11V47.333a9.581 9.581 0 01-3.167-2.111c-2.862-2.860-3.551-7.06-2.083-10.576L41.056 20.333 3.264 58.123a8.133 8.133 0 000 11.5l55.117 55.114c3.174 3.174 8.32 3.174 11.499 0l54.858-54.858a8.135 8.135 0 00-.001-11.501z"/>
+                                </svg>
+                            </div>
+                            <span class="skill-name">Git</span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -215,7 +177,7 @@
             <section id="projects" class="mb-24 md:mb-40 fade-in-section">
                 <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">我的精选项目</h2>
                 <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Loading or error message will be shown here -->
+                    <!-- 项目内容将通过 JavaScript 动态加载 -->
                 </div>
             </section>
             
@@ -241,17 +203,16 @@
                     <!-- 移动端游戏控制器 -->
                     <div id="mobile-game-controls" class="hidden mt-4 text-white text-2xl">
                         <div class="flex justify-center mb-2">
-                            <button id="up-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600">↑</button>
+                            <button id="up-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600" aria-label="向上">↑</button>
                         </div>
                         <div class="flex justify-center">
-                            <button id="left-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600">←</button>
-                            <button id="down-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600">↓</button>
-                            <button id="right-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600">→</button>
+                            <button id="left-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600" aria-label="向左">←</button>
+                            <button id="down-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600" aria-label="向下">↓</button>
+                            <button id="right-button" class="w-16 h-12 bg-gray-700 rounded-lg mx-2 active:bg-gray-600" aria-label="向右">→</button>
                         </div>
                     </div>
                  </div>
             </section>
-
 
             <!-- 联系我区域 (Contact Section) -->
             <section id="contact" class="text-center fade-in-section">
@@ -276,7 +237,7 @@
     <!-- 游戏结束弹窗 -->
     <div id="gameOverModal" class="hidden fixed inset-0 items-center justify-center z-50 p-4">
         <div class="relative text-center text-white p-8 rounded-lg glassmorphism max-w-sm w-full">
-            <button id="closeModalButton" class="absolute top-2 right-3 text-gray-400 hover:text-white text-3xl font-bold transition-transform duration-200 hover:scale-125">&times;</button>
+            <button id="closeModalButton" class="absolute top-2 right-3 text-gray-400 hover:text-white text-3xl font-bold transition-transform duration-200 hover:scale-125" aria-label="关闭弹窗">&times;</button>
             <h2 class="text-3xl sm:text-4xl font-bold mb-4">游戏结束!</h2>
             <p id="finalScore" class="text-lg sm:text-xl mb-6">你的最终分数是: 0</p>
             <button id="restartButton" class="bg-teal-500 text-white font-bold py-3 px-8 rounded-full hover:bg-teal-400 transition duration-300 transform hover:scale-105">
@@ -285,244 +246,18 @@
         </div>
     </div>
     
-    <!-- 关键改动：直接引入本地脚本 -->
-    <script src="particles.min.js"></script>
 
-    <script>
-        // 鼠标跟随光标效果 (仅在桌面端有效)
-        const glow = document.querySelector('.cursor-glow');
-        if (window.matchMedia('(min-width: 768px)').matches) {
-            document.addEventListener('mousemove', (e) => {
-                glow.style.left = `${e.clientX}px`;
-                glow.style.top = `${e.clientY}px`;
-            });
-        }
-        
-        // 无条件初始化粒子特效
-        // 确保DOM加载完成后再执行，避免找不到 #particles-js
-        document.addEventListener('DOMContentLoaded', () => {
-            particlesJS('particles-js', { "particles": { "number": { "value": 80, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#ffffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": false }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out" } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "repulse": { "distance": 100 }, "push": { "particles_nb": 4 } } }, "retina_detect": true });
-        });
+    <!-- 音乐播放器触发按钮 -->
+    <button id="music-trigger" class="music-trigger" title="打开音乐播放器">
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+    </button>
 
-
-        // 移动端导航菜单
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-        });
-
-        // --- 滚动触发动画逻辑 ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
-            });
-        }, {
-            rootMargin: '0px',
-            threshold: 0.1
-        });
-
-        document.querySelectorAll('.fade-in-section').forEach(section => {
-            observer.observe(section);
-        });
-
-
-        // --- GitHub 项目获取逻辑 ---
-        async function fetchGithubProjects() {
-            const repoNames = ['isaleafa/Shell-Cpp-Dash', 'isaleafa/AIagent', 'isaleafa/Animal-Helper'];
-            const customDescriptions = {
-                'Shell-Cpp-Dash': '一个用 C++ 构建的高性能、轻量级命令行 Shell，旨在提供一个快速、流畅且可定制的终端交互体验。',
-                'AIagent': '探索大型语言模型潜力的智能代理程序。它能够理解并执行自然语言指令，旨在成为强大的个人数字助手。',
-                'Animal-Helper': '一款为宠物爱好者和动物救援者设计的移动应用。它提供信息查询、健康记录和社区互助功能，让关爱动物变得更简单。'
-            };
-            const projectsGrid = document.getElementById('projects-grid');
-            projectsGrid.innerHTML = '<p class="text-slate-400 text-center col-span-1 md:col-span-3">正在从 GitHub 加载指定的项目...</p>';
-            try {
-                const fetchPromises = repoNames.map(repoName => fetch(`https://api.github.com/repos/${repoName}`));
-                const responses = await Promise.all(fetchPromises);
-                for (const response of responses) {
-                    if (!response.ok) throw new Error(`GitHub API 请求失败: ${response.status}`);
-                }
-                const repos = await Promise.all(responses.map(res => res.json()));
-                projectsGrid.innerHTML = ''; 
-                repos.forEach(repo => {
-                    const description = customDescriptions[repo.name] || repo.description || '没有提供描述。';
-                    projectsGrid.innerHTML += `<div class="glassmorphism rounded-xl p-6 transform hover:-translate-y-2 transition duration-300 flex flex-col h-full"><div class="flex-grow"><h3 class="text-2xl font-bold text-white mb-2">${repo.name}</h3><p class="text-slate-400 mb-4">${description}</p></div><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="text-teal-400 hover:text-teal-300 font-semibold mt-auto">在 GitHub 上查看 &rarr;</a></div>`;
-                });
-            } catch (error) {
-                console.error('获取 GitHub 项目失败:', error);
-                projectsGrid.innerHTML = `<p class="text-slate-400 text-center col-span-1 md:col-span-3">加载项目失败。请检查仓库名称是否正确，或稍后再试。</p>`;
-            }
-        }
-        document.addEventListener('DOMContentLoaded', fetchGithubProjects);
-
-        // --- 游戏逻辑 ---
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const scoreElement = document.getElementById('score');
-        const gameOverModal = document.getElementById('gameOverModal');
-        const finalScoreElement = document.getElementById('finalScore');
-        const restartButton = document.getElementById('restartButton');
-        const startGameButton = document.getElementById('startGameButton');
-        const gameControls = document.getElementById('game-controls');
-        const closeModalButton = document.getElementById('closeModalButton');
-        const mobileGameControls = document.getElementById('mobile-game-controls');
-        const upButton = document.getElementById('up-button');
-        const downButton = document.getElementById('down-button');
-        const leftButton = document.getElementById('left-button');
-        const rightButton = document.getElementById('right-button');
-        const difficultyButtons = document.querySelectorAll('.difficulty-btn');
-
-        const speeds = { senior: 300, easy: 150, normal: 100, hard: 60 };
-        let currentDifficulty = 'normal';
-
-        let gridSize = 20;
-        let snake, food, direction, score, gameInterval;
-        let isGameRunning = false;
-        
-        difficultyButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                currentDifficulty = button.dataset.difficulty;
-                difficultyButtons.forEach(btn => {
-                    btn.classList.remove('bg-indigo-500');
-                    btn.classList.add('bg-gray-700');
-                });
-                button.classList.add('bg-indigo-500');
-                button.classList.remove('bg-gray-700');
-            });
-        });
-
-        function resizeCanvas() {
-            const size = canvas.clientWidth;
-            canvas.width = size;
-            canvas.height = size;
-            gridSize = size / 20; // 保持20x20的网格
-            if(isGameRunning) draw();
-        }
-
-        function initGameVariables() {
-            const headPosition = Math.floor(10 * (canvas.width / 400));
-            snake = [{ x: headPosition, y: headPosition }];
-            food = {};
-            direction = 'right';
-            score = 0;
-            scoreElement.textContent = `分数: ${score}`;
-        }
-
-        function generateFood() {
-            const cols = canvas.width / gridSize;
-            food = {
-                x: Math.floor(Math.random() * cols),
-                y: Math.floor(Math.random() * cols)
-            };
-            for (let segment of snake) {
-                if (segment.x === food.x && segment.y === food.y) {
-                    generateFood(); return;
-                }
-            }
-        }
-
-        function draw() {
-            ctx.fillStyle = '#0c1220';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            snake.forEach((segment, index) => {
-                ctx.fillStyle = index === 0 ? '#34d399' : '#2dd4bf';
-                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
-            });
-            ctx.fillStyle = '#f43f5e';
-            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
-        }
-
-        function update() {
-            if (!isGameRunning) return;
-            const head = { ...snake[0] };
-            switch (direction) {
-                case 'up': head.y -= 1; break;
-                case 'down': head.y += 1; break;
-                case 'left': head.x -= 1; break;
-                case 'right': head.x += 1; break;
-            }
-            const cols = canvas.width / gridSize;
-            if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= cols || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-                gameOver(); return;
-            }
-            snake.unshift(head);
-            if (head.x === food.x && head.y === food.y) {
-                score++;
-                scoreElement.textContent = `分数: ${score}`;
-                generateFood();
-            } else {
-                snake.pop();
-            }
-            draw();
-        }
-        
-        function gameOver() {
-            isGameRunning = false;
-            clearInterval(gameInterval);
-            finalScoreElement.textContent = `你的最终分数是: ${score}`;
-            gameOverModal.classList.remove('hidden');
-            gameOverModal.classList.add('flex');
-        }
-
-        function setDirection(newDirection) {
-            if (!isGameRunning) return;
-            const goingUp = direction === 'up', goingDown = direction === 'down', goingLeft = direction === 'left', goingRight = direction === 'right';
-            if (newDirection === 'up' && !goingDown) direction = 'up';
-            if (newDirection === 'down' && !goingUp) direction = 'down';
-            if (newDirection === 'left' && !goingRight) direction = 'left';
-            if (newDirection === 'right' && !goingLeft) direction = 'right';
-        }
-
-        function handleKeydown(event) {
-            if (!isGameRunning) return;
-            const keyMap = { 'ArrowUp': 'up', 'w': 'up', 'ArrowDown': 'down', 's': 'down', 'ArrowLeft': 'left', 'a': 'left', 'ArrowRight': 'right', 'd': 'right' };
-            const newDirection = keyMap[event.key.toLowerCase()];
-            if (newDirection) {
-                event.preventDefault();
-                setDirection(newDirection);
-            }
-        }
-        
-        function startGame() {
-            isGameRunning = true;
-            gameControls.style.display = 'none';
-            mobileGameControls.classList.remove('hidden');
-            gameOverModal.classList.add('hidden');
-            gameOverModal.classList.remove('flex');
-            
-            initGameVariables();
-            generateFood();
-            clearInterval(gameInterval);
-            const gameSpeed = speeds[currentDifficulty];
-            gameInterval = setInterval(update, gameSpeed);
-            draw();
-        }
-
-        function closeGameOverModal() {
-            gameOverModal.classList.add('hidden');
-            gameOverModal.classList.remove('flex');
-            gameControls.style.display = 'block';
-            mobileGameControls.classList.add('hidden');
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        document.addEventListener('DOMContentLoaded', resizeCanvas);
-        document.addEventListener('keydown', handleKeydown);
-        startGameButton.addEventListener('click', startGame);
-        restartButton.addEventListener('click', startGame);
-        closeModalButton.addEventListener('click', closeGameOverModal);
-        upButton.addEventListener('click', () => setDirection('up'));
-        downButton.addEventListener('click', () => setDirection('down'));
-        leftButton.addEventListener('click', () => setDirection('left'));
-        rightButton.addEventListener('click', () => setDirection('right'));
-
-    </script>
+    
+    <!-- 引入脚本文件 -->
+    <script src="assets/js/particles.min.js"></script>
+    <script type="module" src="assets/js/app.js"></script>
 
 </body>
 </html>
