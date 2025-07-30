@@ -16,9 +16,7 @@ class ProjectsManager {
     }
 
     init() {
-        document.addEventListener('DOMContentLoaded', () => {
-            this.fetchGithubProjects();
-        });
+        this.fetchGithubProjects();
     }
 
     showLoading() {

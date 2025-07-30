@@ -247,8 +247,8 @@ html {
 }
 
 .skill-icon {
-    width: 40px;
     height: 40px;
+    width: auto;
     transition: all 0.3s ease;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
@@ -285,7 +285,6 @@ html {
     }
     
     .skill-icon {
-        width: 36px;
         height: 36px;
     }
     
